@@ -1,7 +1,8 @@
-define(function(selector) {
+define(function() {
 
 	'use strict';
 
+	/*
 	class ZippyElements  {
 		constructor(elements) {
 			this.elements = elements;
@@ -46,7 +47,6 @@ define(function(selector) {
 		}
 		return this;
 	};
-
 
 	zippy_elements.prototype.removeAttr = function(names) {
 		var name_list = names.split(' ');
@@ -139,5 +139,36 @@ define(function(selector) {
 	};
 
 	return zippy;
+	*/
+
+	var friday = function(selector) {
+
+		var elements = null;
+		var i, j;
+
+		var addClass = function(class_name) {
+
+			var class_names = class_name.split(' ');
+			for (i = 0; i < elements.length; i++) {
+				for (j = 0; j < class_names.length; j++) {
+					elements[i].classList.add(class_names[j]);
+				}
+			}
+		};
+
+		if (selector === 'document') {
+			elements = [document];
+		} else if (selector === 'window') {
+			elements = [window];
+		} else {
+			elements = document.querySelectorAll(selector);
+		}
+
+		return {
+			addClass: addClass,
+		};
+	};
+
+	return friday;
 });
 
