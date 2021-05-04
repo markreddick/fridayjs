@@ -123,21 +123,42 @@ define(function() {
 		}
 	};
 
+	let formEncode = function(obj) {
+
+		var form_data = new FormData();
+		var key;
+		for (key of Object.keys(obj)) {
+			form_data.append(key, obj[key]);
+		}
+
+		return form_data;
+	};
+
+	let handleResponse = function(response) {
+		return response.text().then(function(text) {
+			let data = text && JSON.parse(text);
+
+			if (!response.ok) {
+				let error = data && data.message || response.statusText;
+				return Promise.reject(error);
+			}
+
+			return data;
+		});
+	};
+
 	friday.post = function(url, data) {
-		var f = fetch(url, {
+		let request_options = {
 			'method': 'POST',
 			'mode': 'cors',
 			'cache': 'default',
 			'credentials': 'include',
-			'headers': {
-				'Content-Type': 'application/json'
-			},
 			'redirect': 'follow',
 			'referrer': 'no-referrer',
-			'body': JSON.stringify(data),
-		}).then((response) => response.json());
+			'body': formEncode(data),
+		};
 
-		return f;
+		return fetch(url, request_options).then(handleResponse);
 	};
 
 	return friday;
